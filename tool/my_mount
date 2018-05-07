@@ -1,0 +1,62 @@
+#!/bin/bash
+#set -x
+
+mount_type=""
+ip_addr=""
+my_mount_usage()
+{
+    echo "my_mount_usage"
+}
+
+my_mount()
+{
+    case $1 in
+    "usb"|"USB")
+        echo "my mount with usb"
+        ;;
+    "nfs"|"NFS")
+        if [ $2 ] ;then
+            echo "do my mount with nfs"
+        else
+             echo "undo my mount with nfs"
+        fi
+        ;;
+    *)
+        echo "paramater error"
+        ;;
+    esac
+}
+
+while getopts "t:i:" opt; do  
+  case $opt in  
+    t)
+        mount_type=$OPTARG
+        if [ "$mount_type" = "usb" ];then
+            my_mount $mount_type 
+        elif [ "$mount_type" = "USB" ];then 
+            my_mount $mount_type
+        elif [ "$mount_type" = "nfs" ];then
+            if [ ! "$ip_addr" = "" ];then
+                my_mount $mount_type $ip_addr
+            fi
+        elif [ "$mount_type" = "NFS" ];then
+            if [ ! "$ip_addr" = "" ];then
+                my_mount $mount_type $ip_addr
+            fi
+        else
+            echo "unknow type"
+        fi
+      ;;  
+    i)
+        ip_addr=$OPTARG
+        if [ "$mount_type" = "nfs" ];then
+            my_mount $mount_type $ip_addr
+        elif [ "$mount_type" = "NFS" ];then 
+            my_mount $mount_type $ip_addr
+        fi  
+      ;;
+    \?)  
+      ;;  
+  esac  
+done
+
